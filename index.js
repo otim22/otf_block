@@ -7,10 +7,25 @@ class Block {
         this.data = data;
         this.previousHash = previousHash;
         this.hash = this.calculateHash();
+        this.nonce = 0;
     }
 
     calculateHash() {
-        return SHA256(this.index + this.timestamp + this.previousHash + JSON.stringify(this.data)).toString();
+        return SHA256(
+            this.index + 
+            this.timestamp + 
+            this.previousHash + 
+            JSON.stringify(this.data) +
+            this.nonce
+        ).toString();
+    }
+
+    mineBlock(difficulty) {
+        while (this.hash.substring(0, difficulty) !== Array(difficulty + 1).join("0")) {
+            this.nonce++;
+            this.hash = this.calculateHash();
+        }
+        console.log("BLOCK MINED: " + this.hash);
     }
 }
 
@@ -18,6 +33,7 @@ class Block {
 class Blockchain {
     constructor() {
         this.chain = [this.createGenesisBlock()];
+        this.difficulty = 2;
     }
 
     createGenesisBlock() {
@@ -30,7 +46,8 @@ class Blockchain {
 
     addBlock(newBlock) {
         newBlock.previousHash = this.getLatestBlock().hash;
-        newBlock.hash = newBlock.calculateHash();
+        newBlock.mineBlock(this.difficulty);
+        // newBlock.hash = newBlock.calculateHash();
         this.chain.push(newBlock);
     }
 
@@ -52,12 +69,19 @@ class Blockchain {
 }
 
 let otfCoin = new Blockchain();
-otfCoin.addBlock(new Block(1, "10/03/2019", { amount: 4 }));
-otfCoin.addBlock(new Block(2, "14/03/2019", { amount: 45 }));
+// otfCoin.addBlock(new Block(1, "10/03/2019", { amount: 4 }));
+// otfCoin.addBlock(new Block(2, "14/03/2019", { amount: 45 }));
 
-console.log('Is blockchain valid? ' + otfCoin.isChainValid());
+// console.log('Is blockchain valid? ' + otfCoin.isChainValid());
 
-otfCoin.chain[1].data = { amount: 10 }
-otfCoin.chain[1].hash = otfCoin.chain[1].calculateHash()
-console.log('Is blockchain valid? ' + otfCoin.isChainValid());
-console.log(JSON.stringify(otfCoin, null, 4));
+// otfCoin.chain[1].data = { amount: 10 }
+// otfCoin.chain[1].hash = otfCoin.chain[1].calculateHash()
+// console.log('Is blockchain valid? ' + otfCoin.isChainValid());
+// console.log(JSON.stringify(otfCoin, null, 4));
+
+console.log('Mining block 1');
+otfCoin.addBlock(new Block(1, "20/07/2018", { amount: 4 }));
+
+console.log('Mining block 2');
+otfCoin.addBlock(new Block(2, "20/07/2018", { amount: 8 }));
+
