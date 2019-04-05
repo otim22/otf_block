@@ -47,6 +47,8 @@ console.log('Balance of Ots address is', otfCoin.getBalanceOfAddress('ots-addres
 // Output: 100
 */
 
+// Fouth Testing
+
 const tx1 = new Transaction(myWalletAddress, 'Public key goes here', 10);
 tx1.signTransaction(myKey);
 otfCoin.addTransaction(tx1);
