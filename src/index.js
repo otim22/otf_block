@@ -1,4 +1,9 @@
-const { Blockchain, Transaction, Block } require('./blockchain');
+const { Blockchain, Transaction, Block } = require('./blockchain');
+const EC = require('elliptic').ec;
+const ec = new EC('secp256k1');
+
+const myKey = ec.keyFromPrivate('478f504d5b3c73b17941eb1646d6d58a0bf873bef51138784e4acf2547e02002');
+const myWalletAddress = myKey.getPublic('hex');
 
 let otfCoin = new Blockchain();
 
@@ -24,6 +29,7 @@ console.log('Mining block 2');
 otfCoin.addBlock(new Block(2, "20/07/2018", { amount: 8 }));
 */
 
+/** Third Testing
 console.log('Creating some transactions...');
 otfCoin.createTransaction(new Transaction('address1', 'address2', 100));
 otfCoin.createTransaction(new Transaction('address2', 'address1', 50));
@@ -39,3 +45,18 @@ otfCoin.minePendingTransactions("ots-address");
 
 console.log('Balance of Ots address is', otfCoin.getBalanceOfAddress('ots-address'));
 // Output: 100
+*/
+
+const tx1 = new Transaction(myWalletAddress, 'Public key goes here', 10);
+tx1.signTransaction(myKey);
+otfCoin.addTransaction(tx1);
+
+console.log('Starting miner...');
+otfCoin.minePendingTransactions(myWalletAddress);
+
+console.log('Balance of Ots is ', otfCoin.getBalanceOfAddress(myWalletAddress));
+
+// Tampering
+otfCoin.chain[1].transactions[0].amount = 1;
+
+console.log('Is chain valid? ', otfCoin.isChainValid());
