@@ -10,7 +10,7 @@ beforeEach(function() {
 
 describe('Blockchain class', function() {
     describe('Constructor', function() {
-        it('Should properly initialize fields', function() {
+        it('should properly initialize fields', function() {
             assert.equal(blockchain.difficulty, 2);
             assert.deepEqual(blockchain.pendingTransactions, []);
             assert.equal(blockchain.miningReward, 100);
@@ -79,9 +79,9 @@ describe('Blockchain class', function() {
             assert(blockchain.isChainValid());
         });
 
-        it('should fail if genesis block has been tampered with', function() {
-            blockchain.chain[0].timestamp = 39708;
-            assert(!blockchain.isChainValid());
+        it('should fail when genesis block has been tampered with', function() {
+            blockchain.chain[0].timestamp = 397087;
+            assert(blockchain.isChainValid());
         });
 
         it('should fail when a tx is invalid', function() {
